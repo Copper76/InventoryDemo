@@ -27,7 +27,7 @@ This project is a demo project using Unity Engine. The project is a practice pro
 - Unity 2022.1.15f1
 
 ## Necessary Software
-- [Epic Games Launcher, Unreal Engine 5.2]([https://www.unrealengine.com/en-US/blog](https://unity.com/download))
+- [Unity Editor]([https://www.unrealengine.com/en-US/blog](https://unity.com/download))
 
 ## New To Github?
 
