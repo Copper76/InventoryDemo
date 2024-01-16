@@ -48,6 +48,8 @@ public class InventoryInitialiser : MonoBehaviour
             }
         }
         transform.parent.gameObject.SetActive(false);
+        inventory.maxStackDict = new int[] { 5, 5, 5, 5, 5, 5, 5, 5, 5 };
+        inventory.equipSlot = new int[] { -1, 0, 1, -1, -1, -1, -1, -1, -1 };
         Destroy(this);
     }
 }

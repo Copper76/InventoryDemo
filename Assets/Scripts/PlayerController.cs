@@ -341,7 +341,7 @@ public class PlayerController : MonoBehaviour
             {
                 return Convert.ToInt32(curRaysastResult.gameObject.name);
             }
-            if (curRaysastResult.gameObject.layer == LayerMask.NameToLayer("Menu"))
+            if (curRaysastResult.gameObject.layer == LayerMask.NameToLayer("UI"))
             {
                 hitMenu = true;
             }

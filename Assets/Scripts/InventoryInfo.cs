@@ -32,12 +32,6 @@ public class InventoryInfo : MonoBehaviour
 
     public GameObject[] pickUpPrefabs; 
 
-    private void Awake()
-    {
-        maxStackDict = new int[] { 5,5,5,5,5,5,5,5,5};
-        equipSlot = new int[] { -1,0,1,-1,-1,-1,-1,-1,-1};
-    }
-
     //Add to empty slot
     public void AddItem(Sprite item, int id, int index)
     {
