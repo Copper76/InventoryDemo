@@ -26,8 +26,9 @@ public class InventoryInitialiser : MonoBehaviour
             for (int i = 0; i < inventoryLength; i++)
             {
                 int index = j * inventoryLength + i;
-                GameObject itemObject = new GameObject((index+1).ToString());
+                GameObject itemObject = new GameObject(index.ToString());
                 itemObject.transform.parent = transform;
+                itemObject.layer = 6;
                 Image image = itemObject.AddComponent<Image>();
                 image.color = new Color(1f, 1f, 1f, 0.2f);
                 itemObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-50f+i*60f,100f-j*60f,0.0f);

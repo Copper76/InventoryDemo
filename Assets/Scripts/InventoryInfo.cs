@@ -27,17 +27,21 @@ public class InventoryInfo : MonoBehaviour
     public int[] item_id;
     public int[] stack;
 
-    private int[] maxStackDict;//an array representing stack limit for item based on id
+    public int[] maxStackDict;//an array representing stack limit for item based on id
+    public int[] equipSlot;
+
+    public GameObject[] pickUpPrefabs; 
 
     private void Awake()
     {
         maxStackDict = new int[] { 5,5,5,5,5,5,5,5,5};
+        equipSlot = new int[] { -1,0,1,-1,-1,-1,-1,-1,-1};
     }
 
     //Add to empty slot
-    public void AddItem(GameObject item, int id, int index)
+    public void AddItem(Sprite item, int id, int index)
     {
-        items[index].GetComponent<Image>().sprite = item.GetComponent<SpriteRenderer>().sprite;
+        items[index].GetComponent<Image>().sprite = item;
         item_id[index] = id;
         stack[index] = 1;
         TextMeshProUGUI text = items[index].GetComponentInChildren<TextMeshProUGUI>();
@@ -45,9 +49,26 @@ public class InventoryInfo : MonoBehaviour
         text.text = stack[index].ToString();
     }
 
-    public void StackItem(GameObject item, int index)
+    public void AddItem(Sprite item, int id, int index, int count)
+    {
+        items[index].GetComponent<Image>().sprite = item;
+        item_id[index] = id;
+        stack[index] = count;
+        TextMeshProUGUI text = items[index].GetComponentInChildren<TextMeshProUGUI>();
+        text.enabled = true;
+        text.text = stack[index].ToString();
+    }
+
+    public void StackItem(int index)
     {
         stack[index] += 1;
+        TextMeshProUGUI text = items[index].GetComponentInChildren<TextMeshProUGUI>();
+        text.text = stack[index].ToString();
+    }
+
+    public void StackItem(int index, int count)
+    {
+        stack[index] += count;
         TextMeshProUGUI text = items[index].GetComponentInChildren<TextMeshProUGUI>();
         text.text = stack[index].ToString();
     }
