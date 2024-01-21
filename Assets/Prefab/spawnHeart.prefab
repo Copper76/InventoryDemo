@@ -127,4 +127,4 @@ MonoBehaviour:
   item_id: 2
   recentlySpawned: 1
   pickUpName: Heart
-  description: This is a heart
+  description: This is a heart. It can be equiopped on waist

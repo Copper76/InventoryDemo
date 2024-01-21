@@ -25,12 +25,6 @@ public struct ItemInfo
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] GameObject describer;
-    [SerializeField] GameObject headSlot;
-    [SerializeField] GameObject waistSlot;
-    [SerializeField] GameObject leftHandSlot;
-    [SerializeField] GameObject rightHandSlot;
-    [SerializeField] GameObject leftFootSlot;
-    [SerializeField] GameObject rightFootSlot;
 
     [SerializeField] private InventoryInfo inventory;
     private GameObject inventoryMenu;
@@ -39,6 +33,7 @@ public class PlayerController : MonoBehaviour
     private ItemInfo selectedInfo;
     private int prevSlot;
     private GameObject prevEquipment;
+    //private GameObject[] equipments;
     private bool fromSlot;
 
     [SerializeField] private GameObject descriptor;
@@ -64,6 +59,7 @@ public class PlayerController : MonoBehaviour
         jumpTimeCounter = maxJumpTime;
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
+        //equipments = new GameObject[] { headSlot, waistSlot, leftHandSlot, rightHandSlot, leftFootSlot, rightFootSlot };
     }
 
     void Start()
@@ -166,24 +162,6 @@ public class PlayerController : MonoBehaviour
                 prevSlot = selectedSlot;
                 fromSlot = true;
             }
-            else
-            {
-                /**
-                selectedSlot = IsPointerOverEquipment();
-                if (selectedSlot != -1)
-                {
-                    selected.SetActive(true);
-                    Image image = equipments[selectedSlot].GetComponent<Image>();
-                    selected.GetComponent<Image>().sprite = image.sprite;
-                    image.sprite = null;
-                    selectedInfo = new ItemInfo(inventory.item_id[selectedSlot], inventory.stack[selectedSlot]);
-                    inventory.item_id[selectedSlot] = 0;
-                    inventory.stack[selectedSlot] = 0;
-                    prevSlot = selectedSlot;
-                    fromSlot = true;
-                }
-                **/
-            }
         }
     }
 
@@ -192,71 +170,46 @@ public class PlayerController : MonoBehaviour
         if (context.performed && selected.activeInHierarchy)
         {
             int selectedSlot = IsPointerOverSlot();
-            if (selectedSlot > -1)
+            if (selectedSlot > -1)//The pointer is on a valid slot
             {
-                if (inventory.item_id[selectedSlot] == selectedInfo.item_id)
+                if ((inventory.equipSlot[selectedInfo.item_id] != selectedSlot && selectedSlot < 6) || (inventory.item_id[selectedSlot] != 0 && inventory.equipSlot[inventory.item_id[selectedSlot]] != prevSlot && prevSlot < 6))//The target is invalid or the item in the target slot cannot be swapped to the current slot
                 {
-                    if (inventory.stack[selectedSlot] + selectedInfo.stack <= inventory.maxStackDict[selectedInfo.item_id])
+                    inventory.AddItem(selected.GetComponent<Image>().sprite, selectedInfo.item_id, prevSlot, selectedInfo.stack);
+                }
+                else if (inventory.item_id[selectedSlot] == selectedInfo.item_id)//The target slot has the same type of item
+                {
+                    if (inventory.stack[selectedSlot] + selectedInfo.stack <= inventory.maxStackDict[selectedInfo.item_id])//The item can be fully transferred
                     {
                         inventory.StackItem(selectedSlot, selectedInfo.stack);
-                        //inventory.stack[selectedSlot] += selectedInfo.stack;
                     }
-                    else
+                    else//There are too many items to transfer
                     {
                         inventory.AddItem(selected.GetComponent<Image>().sprite, selectedInfo.item_id, prevSlot, selectedInfo.stack + inventory.stack[selectedSlot] - inventory.maxStackDict[selectedInfo.item_id]);
-                        //inventory.items[prevSlot].GetComponent<Image>().sprite = selected.GetComponent<Image>().sprite;
-                        //inventory.item_id[prevSlot] = selectedInfo.item_id;
-                        //inventory.stack[prevSlot] = selectedInfo.stack + inventory.stack[selectedSlot] - inventory.maxStackDict[selectedInfo.item_id];
                         inventory.StackItem(selectedSlot, inventory.maxStackDict[selectedInfo.item_id] - inventory.stack[selectedSlot]);
-                        //inventory.stack[selectedSlot] = inventory.maxStackDict[selectedInfo.item_id];
-                        //TextMeshProUGUI prevText = inventory.items[prevSlot].GetComponentInChildren<TextMeshProUGUI>();
-                        //prevText.enabled = true;
-                        //prevText.text = inventory.stack[prevSlot].ToString();
+
                     }
                     TextMeshProUGUI text = inventory.items[selectedSlot].GetComponentInChildren<TextMeshProUGUI>();
                     text.text = inventory.stack[selectedSlot].ToString();
                 }
-                else
+                else//The target slot has a different kind of item
                 {
                     if (inventory.item_id[selectedSlot] != 0)
                     {
                         inventory.AddItem(inventory.items[selectedSlot].GetComponent<Image>().sprite, inventory.item_id[selectedSlot], prevSlot, inventory.stack[selectedSlot]);
-                        /**
-                        inventory.items[prevSlot].GetComponent<Image>().sprite = inventory.items[selectedSlot].GetComponent<Image>().sprite;
-                        inventory.item_id[prevSlot] = inventory.item_id[selectedSlot];
-                        inventory.stack[prevSlot] = inventory.stack[selectedSlot];
-                        TextMeshProUGUI prevText = inventory.items[prevSlot].GetComponentInChildren<TextMeshProUGUI>();
-                        prevText.enabled = true;
-                        prevText.text = inventory.stack[prevSlot].ToString();
-                        **/
                     }
                     inventory.AddItem(selected.GetComponent<Image>().sprite, selectedInfo.item_id, selectedSlot, selectedInfo.stack);
-                    /**
-                    inventory.items[selectedSlot].GetComponent<Image>().sprite = selected.GetComponent<Image>().sprite;
-                    inventory.item_id[selectedSlot] = selectedInfo.item_id;
-                    inventory.stack[selectedSlot] = selectedInfo.stack;
-                    TextMeshProUGUI text = inventory.items[selectedSlot].GetComponentInChildren<TextMeshProUGUI>();
-                    text.enabled = true;
-                    text.text = inventory.stack[selectedSlot].ToString();
-                    **/
                 }
             }
-            else if (selectedSlot == -1)
+            else if (selectedSlot == -1)//The pointer is not in on a slot but still in menu, reset the transfer
             {
                 inventory.AddItem(selected.GetComponent<Image>().sprite, selectedInfo.item_id, prevSlot, selectedInfo.stack);
-                //inventory.items[prevSlot].GetComponent<Image>().sprite = selected.GetComponent<Image>().sprite;
-                //inventory.item_id[prevSlot] = selectedInfo.item_id;
-                //inventory.stack[prevSlot] = selectedInfo.stack;
-                //TextMeshProUGUI prevText = inventory.items[prevSlot].GetComponentInChildren<TextMeshProUGUI>();
-                //prevText.enabled = true;
-                //prevText.text = inventory.stack[prevSlot].ToString();
             }
-            else
+            else//The pointer is outside the menu so the items should be dropped
             {
                 for (int i = 0; i < selectedInfo.stack; i++)
                 {
                     GameObject droppedItem = Instantiate(inventory.pickUpPrefabs[selectedInfo.item_id], transform.position, Quaternion.identity);
-                    droppedItem.name = "D" + selectedInfo.item_id.ToString();
+                    droppedItem.name = selectedInfo.item_id.ToString();
                 }
             }
             selected.SetActive(false);
@@ -341,7 +294,7 @@ public class PlayerController : MonoBehaviour
             {
                 return Convert.ToInt32(curRaysastResult.gameObject.name);
             }
-            if (curRaysastResult.gameObject.layer == LayerMask.NameToLayer("UI"))
+            if (curRaysastResult.gameObject.layer == LayerMask.NameToLayer("InventoryMenu"))
             {
                 hitMenu = true;
             }

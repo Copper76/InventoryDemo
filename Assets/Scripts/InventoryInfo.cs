@@ -70,7 +70,7 @@ public class InventoryInfo : MonoBehaviour
     public int FindStackSlot(int id)
     {
         int target_index;
-        int start_index = 0;
+        int start_index = 6;
         do
         {
             target_index = Array.IndexOf(item_id, id, start_index);
@@ -81,7 +81,7 @@ public class InventoryInfo : MonoBehaviour
 
     public int FindAvailableSlot()
     {
-        for (int i = 0; i < stack.Length; i++)
+        for (int i = 6; i < stack.Length; i++)
         {
             if (item_id[i] == 0)
             {

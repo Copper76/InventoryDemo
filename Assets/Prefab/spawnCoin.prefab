@@ -127,4 +127,4 @@ MonoBehaviour:
   item_id: 1
   recentlySpawned: 1
   pickUpName: Coin
-  description: This is a coin
+  description: This is a coin. It can be equipped on head.
