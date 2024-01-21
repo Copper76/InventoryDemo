@@ -127,4 +127,5 @@ MonoBehaviour:
   item_id: 1
   recentlySpawned: 1
   pickUpName: Coin
-  description: This is a coin. It can be equipped on head.
+  description: This is a coin. It can be equipped on head. You can stack 3 coins
+    in one slot
