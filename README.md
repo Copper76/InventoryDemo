@@ -1,4 +1,4 @@
-# Unreal Engine Portal Demo
+# Unity Inventory Demo
 
 This project is a demo project using Unity Engine. The project is a practice project where all the functions are implemented using Unity Editor and C#.
 
